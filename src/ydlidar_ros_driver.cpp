@@ -30,6 +30,8 @@
 #include "ydlidar_config.h"
 #include <limits>       // std::numeric_limits
 
+#define SDKROSVerision "1.0.0"
+
 CYdLidar laser;
 
 bool stop_scan(std_srvs::Empty::Request &req,
@@ -49,10 +51,10 @@ bool start_scan(std_srvs::Empty::Request &req,
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "ydlidar_ros_driver");
-  ROS_INFO("YDLIDAR ROS Driver Version: %s", YDLIDAR_SDK_VERSION_STR);
+  ROS_INFO("YDLIDAR ROS Driver Version: %s", SDKROSVerision);
   ros::NodeHandle nh;
-  ros::Publisher scan_pub = nh.advertise<sensor_msgs::LaserScan>("scan", 1000);
-  ros::Publisher laser_fan_pub = nh.advertise<ydlidar_ros_driver::LaserFan>("laser_fan", 1000);
+  ros::Publisher scan_pub = nh.advertise<sensor_msgs::LaserScan>("scan", 1);
+  ros::Publisher laser_fan_pub = nh.advertise<ydlidar_ros_driver::LaserFan>("laser_fan", 1);
 
   ros::NodeHandle nh_private("~");
   std::string str_optvalue = "/dev/ydlidar";
