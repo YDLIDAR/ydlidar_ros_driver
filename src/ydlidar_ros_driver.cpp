@@ -185,10 +185,7 @@ int main(int argc, char **argv) {
       for(size_t i=0; i < scan.points.size(); i++) {
         int index = std::ceil((scan.points[i].angle - scan.config.min_angle)/scan.config.angle_increment);
         if(index >=0 && index < size) {
-          if(invalid_range_is_inf && scan.points[i].range < scan.config.min_range) {
-            scan_msg.ranges[index] = std::numeric_limits<float>::infinity();
-            scan_msg.intensities[index] = 0;
-          } else {
+          if(scan.points[i].range >= scan.config.min_range) {
             scan_msg.ranges[index] = scan.points[i].range;
             scan_msg.intensities[index] = scan.points[i].intensity;
           }
