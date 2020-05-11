@@ -38,9 +38,9 @@ generate_messages(DEPENDENCIES
 ## INCLUDE_DIRS: uncomment this if your package contains header files
 ## LIBRARIES: libraries you create in this project that dependent projects als    o need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
-## DEPENDS: system dependencies of this project that dependent projects also n    eed
+## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(CATKIN_DEPENDS
-	roscpp rospy sensor_msgs message_generation
+	roscpp rospy sensor_msgs message_runtime
 	)
 #---------------------------------------------------------------------------------------
 # Set default build to release
@@ -68,6 +68,11 @@ link_directories(${YDLIDAR_SDK_LIBRARY_DIRS})
 # generate excutable and add libraries
 #---------------------------------------------------------------------------------------
 add_executable(${PROJECT_NAME}_node src/ydlidar_ros_driver.cpp)
+
+#---------------------------------------------------------------------------------------
+# add projects that depend on
+#---------------------------------------------------------------------------------------
+add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp)
 
 #---------------------------------------------------------------------------------------
 # link libraries
