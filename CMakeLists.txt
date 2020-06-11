@@ -62,12 +62,24 @@ include_directories(${catkin_INCLUDE_DIRS} ${YDLIDAR_SDK_INCLUDE_DIRS})
 #link library directories
 link_directories(${YDLIDAR_SDK_LIBRARY_DIRS})
 
+## Laser Fuse
+set(LASER_FUSE_PATH "./laser_fuse")
+
+FILE(GLOB LASER_FUSE_SRC 
+  "${LASER_FUSE_PATH}/*.cpp"
+)
+include_directories(${PROJECT_SOURCE_DIR}
+${PROJECT_SOURCE_DIR}/src
+${PROJECT_SOURCE_DIR}/laser_fuse
+)
+
+
 
 
 #---------------------------------------------------------------------------------------
 # generate excutable and add libraries
 #---------------------------------------------------------------------------------------
-add_executable(${PROJECT_NAME}_node src/ydlidar_ros_driver.cpp)
+add_executable(${PROJECT_NAME}_node src/ydlidar_ros_driver.cpp ${LASER_FUSE_SRC})
 
 #---------------------------------------------------------------------------------------
 # add projects that depend on

@@ -29,8 +29,9 @@
 #include "src/CYdLidar.h"
 #include "ydlidar_config.h"
 #include <limits>       // std::numeric_limits
+#include "laser_fuse/laser_fuse.h"
 
-#define SDKROSVerision "1.0.0"
+#define SDKROSVerision "1.0.1"
 
 CYdLidar laser;
 
@@ -153,6 +154,7 @@ int main(int argc, char **argv) {
   } else {
     ROS_ERROR("%s\n", laser.DescribeError());
   }
+  LaserFuse m_laser_fuse;
   ros::Rate r(30);
   while (ret && ros::ok()) {
     LaserScan scan;
@@ -194,6 +196,7 @@ int main(int argc, char **argv) {
         fan.ranges.push_back(scan.points[i].range);
         fan.intensities.push_back(scan.points[i].intensity);
       }
+      m_laser_fuse.processLaser(scan, scan_msg); 
       scan_pub.publish(scan_msg);
       laser_fan_pub.publish(fan);
 
