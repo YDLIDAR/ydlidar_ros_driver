@@ -57,7 +57,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 #Include directories
-include_directories(${catkin_INCLUDE_DIRS} ${YDLIDAR_SDK_INCLUDE_DIRS})
+include_directories(${catkin_INCLUDE_DIRS} ${YDLIDAR_SDK_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
 
 #link library directories
 link_directories(${YDLIDAR_SDK_LIBRARY_DIRS})
@@ -67,7 +67,7 @@ link_directories(${YDLIDAR_SDK_LIBRARY_DIRS})
 #---------------------------------------------------------------------------------------
 # generate excutable and add libraries
 #---------------------------------------------------------------------------------------
-add_executable(${PROJECT_NAME}_node src/ydlidar_ros_driver.cpp)
+add_executable(${PROJECT_NAME}_node src/ydlidar_ros_driver.cpp NoiseFilter/NoiseFilter.cc NoiseFilter/NoiseFilter.h)
 
 #---------------------------------------------------------------------------------------
 # add projects that depend on

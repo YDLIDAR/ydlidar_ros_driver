@@ -29,6 +29,7 @@
 #include "src/CYdLidar.h"
 #include "ydlidar_config.h"
 #include <limits>       // std::numeric_limits
+#include "NoiseFilter/NoiseFilter.h"
 
 #define SDKROSVerision "1.0.0"
 
@@ -153,10 +154,13 @@ int main(int argc, char **argv) {
   } else {
     ROS_ERROR("%s\n", laser.DescribeError());
   }
+  NoiseFilter m_noiseFilter;
   ros::Rate r(30);
   while (ret && ros::ok()) {
     LaserScan scan;
-    if (laser.doProcessSimple(scan)) {
+    LaserScan raw_scan;
+    if (laser.doProcessSimple(raw_scan)) {
+      m_noiseFilter.filters(raw_scan, scan);
       sensor_msgs::LaserScan scan_msg;
       ydlidar_ros_driver::LaserFan fan;
       ros::Time start_scan_time;
