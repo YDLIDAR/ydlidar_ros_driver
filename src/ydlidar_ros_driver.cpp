@@ -24,14 +24,15 @@
 
 #include <ros/ros.h>
 #include "sensor_msgs/LaserScan.h"
-#include "ydlidar_ros_driver/LaserFan.h"
+//#include "ydlidar_ros_driver/LaserFan.h"
 #include "std_srvs/Empty.h"
 #include "src/CYdLidar.h"
 #include "ydlidar_config.h"
 #include <limits>       // std::numeric_limits
 #include "NoiseFilter/NoiseFilter.h"
+#include "laser_fuse/laser_fuse.h"
 
-#define SDKROSVerision "1.0.0"
+#define SDKROSVerision "1.0.1"
 
 CYdLidar laser;
 
@@ -55,7 +56,7 @@ int main(int argc, char **argv) {
   ROS_INFO("YDLIDAR ROS Driver Version: %s", SDKROSVerision);
   ros::NodeHandle nh;
   ros::Publisher scan_pub = nh.advertise<sensor_msgs::LaserScan>("scan", 1);
-  ros::Publisher laser_fan_pub = nh.advertise<ydlidar_ros_driver::LaserFan>("laser_fan", 1);
+  //ros::Publisher laser_fan_pub = nh.advertise<ydlidar_ros_driver::LaserFan>("laser_fan", 1);
 
   ros::NodeHandle nh_private("~");
   std::string str_optvalue = "/dev/ydlidar";
@@ -155,20 +156,21 @@ int main(int argc, char **argv) {
     ROS_ERROR("%s\n", laser.DescribeError());
   }
   NoiseFilter m_noiseFilter;
+  LaserFuse m_laser_fuse;
   ros::Rate r(30);
   while (ret && ros::ok()) {
     LaserScan scan;
     LaserScan raw_scan;
     if (laser.doProcessSimple(raw_scan)) {
-      m_noiseFilter.filters(raw_scan, scan);
+      m_noiseFilter.filter_strong(raw_scan, scan);
       sensor_msgs::LaserScan scan_msg;
-      ydlidar_ros_driver::LaserFan fan;
+      //ydlidar_ros_driver::LaserFan fan;
       ros::Time start_scan_time;
       start_scan_time.sec = scan.stamp/1000000000ul;
       start_scan_time.nsec = scan.stamp%1000000000ul;
       scan_msg.header.stamp = start_scan_time;
       scan_msg.header.frame_id = frame_id;
-      fan.header = scan_msg.header;
+      //fan.header = scan_msg.header;
       scan_msg.angle_min =(scan.config.min_angle);
       scan_msg.angle_max = (scan.config.max_angle);
       scan_msg.angle_increment = (scan.config.angle_increment);
@@ -176,12 +178,12 @@ int main(int argc, char **argv) {
       scan_msg.time_increment = scan.config.time_increment;
       scan_msg.range_min = (scan.config.min_range);
       scan_msg.range_max = (scan.config.max_range);
-      fan.angle_min =(scan.config.min_angle);
+      /*fan.angle_min =(scan.config.min_angle);
       fan.angle_max = (scan.config.max_angle);
       fan.scan_time = scan.config.scan_time;
       fan.time_increment = scan.config.time_increment;
       fan.range_min = (scan.config.min_range);
-      fan.range_max = (scan.config.max_range);
+      fan.range_max = (scan.config.max_range);*/
 
       int size = (scan.config.max_angle - scan.config.min_angle)/ scan.config.angle_increment + 1;
       scan_msg.ranges.resize(size, invalid_range_is_inf ? std::numeric_limits<float>::infinity() : 0.0);
@@ -194,12 +196,13 @@ int main(int argc, char **argv) {
             scan_msg.intensities[index] = scan.points[i].intensity;
           }
         }
-        fan.angles.push_back(scan.points[i].angle);
+        /*fan.angles.push_back(scan.points[i].angle);
         fan.ranges.push_back(scan.points[i].range);
-        fan.intensities.push_back(scan.points[i].intensity);
+        fan.intensities.push_back(scan.points[i].intensity);*/
       }
+      m_laser_fuse.processLaser(scan, scan_msg); 
       scan_pub.publish(scan_msg);
-      laser_fan_pub.publish(fan);
+      //laser_fan_pub.publish(fan);
 
     } else {
       ROS_ERROR("Failed to get Lidar Data");
