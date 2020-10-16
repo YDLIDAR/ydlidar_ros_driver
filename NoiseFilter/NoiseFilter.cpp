@@ -169,7 +169,7 @@ void NoiseFilter::filter_low(const LaserScan &in, LaserScan &out) {
 }
 
 
-void NoiseFilter::filter_strong(const LaserScan &in, LaserScan &out) {
+void NoiseFilter::filter_strong(const LaserScan &in, LaserScan &out, bool inverted) {
   //range is empty
   if (in.points.empty()) {
     out = in;
@@ -179,6 +179,9 @@ void NoiseFilter::filter_strong(const LaserScan &in, LaserScan &out) {
   std::vector<bool> maskedPoints;
   double lastRange = in.points[0].range;
   double lastAngle = in.points[0].angle;
+  if(inverted) {
+      lastAngle = 2 * M_PI - lastAngle;
+  }
   double lastInclineRange = lastRange;
   const int nrPoints = in.points.size();
   maskedPoints.resize(nrPoints, false);
@@ -192,6 +195,9 @@ void NoiseFilter::filter_strong(const LaserScan &in, LaserScan &out) {
   for (int i = 0; i < nrPoints; i++) {
     double current_range = in.points[i].range;//current lidar distance
     double current_angle = in.points[i].angle;//current lidar angle
+    if(inverted) {
+      current_angle = 2 * M_PI - current_angle;
+    }
 
     if (isRangeValid(in.config,
                      current_range) /*&& isRangeValid(in.config, lastDistance)*/) {
@@ -217,11 +223,19 @@ void NoiseFilter::filter_strong(const LaserScan &in, LaserScan &out) {
             if (i + j - 1 < 0) {
               continue;
             }
+            double offset = 0.0;
+            if(inverted) {
+               offset = calculateTargetOffset(in.points[i + j - 1].range,
+                                                  2 * M_PI - in.points[i + j - 1].angle,
+                                                  in.points[i + j].range,
+                                                  2 * M_PI - in.points[i + j].angle); //calculate offset distance
 
-            double offset = calculateTargetOffset(in.points[i + j - 1].range,
+            } else {
+               offset = calculateTargetOffset(in.points[i + j - 1].range,
                                                   in.points[i + j - 1].angle,
                                                   in.points[i + j].range,
                                                   in.points[i + j].angle); //calculate offset distance
+            }
 
             if (offset < 0.2) {
               maskedPoints[i + j] = true;

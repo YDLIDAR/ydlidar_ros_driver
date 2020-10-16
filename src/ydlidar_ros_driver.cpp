@@ -104,6 +104,7 @@ int main(int argc, char **argv) {
   laser.setlidaropt(LidarPropReversion, &b_optvalue, sizeof(bool));
   /// Counterclockwise
   nh_private.param<bool>("inverted", b_optvalue, true);
+  bool m_Inverted = b_optvalue;
   laser.setlidaropt(LidarPropInverted, &b_optvalue, sizeof(bool));
   b_optvalue = true;
   nh_private.param<bool>("auto_reconnect", b_optvalue, true);
@@ -162,7 +163,7 @@ int main(int argc, char **argv) {
     LaserScan scan;
     LaserScan raw_scan;
     if (laser.doProcessSimple(raw_scan)) {
-      m_noiseFilter.filter_strong(raw_scan, scan);
+      m_noiseFilter.filter_strong(raw_scan, scan,m_Inverted);
       sensor_msgs::LaserScan scan_msg;
       //ydlidar_ros_driver::LaserFan fan;
       ros::Time start_scan_time;

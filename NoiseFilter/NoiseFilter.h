@@ -9,7 +9,7 @@ class NoiseFilter {
   NoiseFilter();
   ~NoiseFilter();
   void filter_low(const LaserScan &in, LaserScan &out);
-  void filter_strong(const LaserScan &in, LaserScan &out);
+  void filter_strong(const LaserScan &in, LaserScan &out, bool inverted = false);
 
  private:
 
