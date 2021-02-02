@@ -24,26 +24,25 @@
 
 #include <ros/ros.h>
 #include "sensor_msgs/LaserScan.h"
-#include "ydlidar_ros_driver/LaserFan.h"
+#include "sensor_msgs/PointCloud.h"
+//#include "ydlidar_ros_driver/LaserFan.h"
 #include "std_srvs/Empty.h"
 #include "src/CYdLidar.h"
 #include "ydlidar_config.h"
 #include <limits>       // std::numeric_limits
 
-#define SDKROSVerision "1.0.0"
+#define SDKROSVerision "1.0.1"
 
 CYdLidar laser;
 
 bool stop_scan(std_srvs::Empty::Request &req,
-                               std_srvs::Empty::Response &res)
-{
+               std_srvs::Empty::Response &res) {
   ROS_DEBUG("Stop scan");
   return laser.turnOff();
 }
 
 bool start_scan(std_srvs::Empty::Request &req,
-                               std_srvs::Empty::Response &res)
-{
+                std_srvs::Empty::Response &res) {
   ROS_DEBUG("Start scan");
   return laser.turnOn();
 }
@@ -54,17 +53,22 @@ int main(int argc, char **argv) {
   ROS_INFO("YDLIDAR ROS Driver Version: %s", SDKROSVerision);
   ros::NodeHandle nh;
   ros::Publisher scan_pub = nh.advertise<sensor_msgs::LaserScan>("scan", 1);
-  ros::Publisher laser_fan_pub = nh.advertise<ydlidar_ros_driver::LaserFan>("laser_fan", 1);
+  ros::Publisher pc_pub = nh.advertise<sensor_msgs::PointCloud>("point_cloud",
+                          1);
+//  ros::Publisher laser_fan_pub =
+//    nh.advertise<ydlidar_ros_driver::LaserFan>("laser_fan", 1);
 
   ros::NodeHandle nh_private("~");
   std::string str_optvalue = "/dev/ydlidar";
   nh_private.param<std::string>("port", str_optvalue, "/dev/ydlidar");
   ///lidar port
-  laser.setlidaropt(LidarPropSerialPort, str_optvalue.c_str(), str_optvalue.size());
+  laser.setlidaropt(LidarPropSerialPort, str_optvalue.c_str(),
+                    str_optvalue.size());
 
   ///ignore array
   nh_private.param<std::string>("ignore_array", str_optvalue, "");
-  laser.setlidaropt(LidarPropIgnoreArray, str_optvalue.c_str(), str_optvalue.size());
+  laser.setlidaropt(LidarPropIgnoreArray, str_optvalue.c_str(),
+                    str_optvalue.size());
 
   std::string frame_id = "laser_frame";
   nh_private.param<std::string>("frame_id", frame_id, "laser_frame");
@@ -90,7 +94,7 @@ int main(int argc, char **argv) {
   optval = 4;
   nh_private.param<int>("abnormal_check_count", optval, 4);
   laser.setlidaropt(LidarPropAbnormalCheckCount, &optval, sizeof(int));
-     
+
 
   //////////////////////bool property/////////////////
   /// fixed angle resolution
@@ -140,66 +144,105 @@ int main(int argc, char **argv) {
   laser.setlidaropt(LidarPropScanFrequency, &f_optvalue, sizeof(float));
 
   bool invalid_range_is_inf = false;
-  nh_private.param<bool>("invalid_range_is_inf", invalid_range_is_inf, invalid_range_is_inf);
+  nh_private.param<bool>("invalid_range_is_inf", invalid_range_is_inf,
+                         invalid_range_is_inf);
 
-  ros::ServiceServer stop_scan_service = nh.advertiseService("stop_scan", stop_scan);
-  ros::ServiceServer start_scan_service = nh.advertiseService("start_scan", start_scan);
+  bool point_cloud_preservative = false;
+  nh_private.param<bool>("point_cloud_preservative", point_cloud_preservative,
+                         point_cloud_preservative);
+
+  ros::ServiceServer stop_scan_service = nh.advertiseService("stop_scan",
+                                         stop_scan);
+  ros::ServiceServer start_scan_service = nh.advertiseService("start_scan",
+                                          start_scan);
 
   // initialize SDK and LiDAR
   bool ret = laser.initialize();
+
   if (ret) {//success
     //Start the device scanning routine which runs on a separate thread and enable motor.
     ret = laser.turnOn();
   } else {
     ROS_ERROR("%s\n", laser.DescribeError());
   }
+
   ros::Rate r(30);
+
   while (ret && ros::ok()) {
     LaserScan scan;
+
     if (laser.doProcessSimple(scan)) {
       sensor_msgs::LaserScan scan_msg;
-      ydlidar_ros_driver::LaserFan fan;
+      sensor_msgs::PointCloud pc_msg;
+//      ydlidar_ros_driver::LaserFan fan;
       ros::Time start_scan_time;
-      start_scan_time.sec = scan.stamp/1000000000ul;
-      start_scan_time.nsec = scan.stamp%1000000000ul;
+      start_scan_time.sec = scan.stamp / 1000000000ul;
+      start_scan_time.nsec = scan.stamp % 1000000000ul;
       scan_msg.header.stamp = start_scan_time;
       scan_msg.header.frame_id = frame_id;
-      fan.header = scan_msg.header;
-      scan_msg.angle_min =(scan.config.min_angle);
+      pc_msg.header = scan_msg.header;
+//      fan.header = scan_msg.header;
+      scan_msg.angle_min = (scan.config.min_angle);
       scan_msg.angle_max = (scan.config.max_angle);
       scan_msg.angle_increment = (scan.config.angle_increment);
       scan_msg.scan_time = scan.config.scan_time;
       scan_msg.time_increment = scan.config.time_increment;
       scan_msg.range_min = (scan.config.min_range);
       scan_msg.range_max = (scan.config.max_range);
-      fan.angle_min =(scan.config.min_angle);
-      fan.angle_max = (scan.config.max_angle);
-      fan.scan_time = scan.config.scan_time;
-      fan.time_increment = scan.config.time_increment;
-      fan.range_min = (scan.config.min_range);
-      fan.range_max = (scan.config.max_range);
+//      fan.angle_min = (scan.config.min_angle);
+//      fan.angle_max = (scan.config.max_angle);
+//      fan.scan_time = scan.config.scan_time;
+//      fan.time_increment = scan.config.time_increment;
+//      fan.range_min = (scan.config.min_range);
+//      fan.range_max = (scan.config.max_range);
 
-      int size = (scan.config.max_angle - scan.config.min_angle)/ scan.config.angle_increment + 1;
-      scan_msg.ranges.resize(size, invalid_range_is_inf ? std::numeric_limits<float>::infinity() : 0.0);
+      int size = (scan.config.max_angle - scan.config.min_angle) /
+                 scan.config.angle_increment + 1;
+      scan_msg.ranges.resize(size,
+                             invalid_range_is_inf ? std::numeric_limits<float>::infinity() : 0.0);
       scan_msg.intensities.resize(size);
-      for(size_t i=0; i < scan.points.size(); i++) {
-        int index = std::ceil((scan.points[i].angle - scan.config.min_angle)/scan.config.angle_increment);
-        if(index >=0 && index < size) {
-          if(scan.points[i].range >= scan.config.min_range) {
+      pc_msg.channels.resize(2);
+      int idx_intensity = 0;
+      pc_msg.channels[idx_intensity].name = "intensities";
+      int idx_timestamp = 1;
+      pc_msg.channels[idx_timestamp].name = "stamps";
+
+      for (size_t i = 0; i < scan.points.size(); i++) {
+        int index = std::ceil((scan.points[i].angle - scan.config.min_angle) /
+                              scan.config.angle_increment);
+
+        if (index >= 0 && index < size) {
+          if (scan.points[i].range >= scan.config.min_range) {
             scan_msg.ranges[index] = scan.points[i].range;
             scan_msg.intensities[index] = scan.points[i].intensity;
           }
         }
-        fan.angles.push_back(scan.points[i].angle);
-        fan.ranges.push_back(scan.points[i].range);
-        fan.intensities.push_back(scan.points[i].intensity);
+
+        if (point_cloud_preservative ||
+            (scan.points[i].range >= scan.config.min_range &&
+             scan.points[i].range <= scan.config.max_range)) {
+          geometry_msgs::Point32 point;
+          point.x = scan.points[i].range * cos(scan.points[i].angle);
+          point.y = scan.points[i].range * sin(scan.points[i].angle);
+          point.z = 0.0;
+          pc_msg.points.push_back(point);
+          pc_msg.channels[idx_intensity].values.push_back(scan.points[i].intensity);
+          pc_msg.channels[idx_timestamp].values.push_back(i * scan.config.time_increment);
+        }
+
+//        fan.angles.push_back(scan.points[i].angle);
+//        fan.ranges.push_back(scan.points[i].range);
+//        fan.intensities.push_back(scan.points[i].intensity);
       }
+
       scan_pub.publish(scan_msg);
-      laser_fan_pub.publish(fan);
+      pc_pub.publish(pc_msg);
+//      laser_fan_pub.publish(fan);
 
     } else {
       ROS_ERROR("Failed to get Lidar Data");
     }
+
     r.sleep();
     ros::spinOnce();
   }
