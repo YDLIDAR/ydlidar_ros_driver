@@ -21,14 +21,14 @@ find_package(catkin REQUIRED COMPONENTS
 	)
 
 ##################LaserFan ##########################
-add_message_files(DIRECTORY msg
-  FILES
-  LaserFan.msg
-)
+#add_message_files(DIRECTORY msg
+#  FILES
+#  LaserFan.msg
+#)
 
-generate_messages(DEPENDENCIES
-  std_msgs
-)
+#generate_messages(DEPENDENCIES
+#  std_msgs
+#)
 
 ###################################
 ## catkin specific configuration ##
@@ -72,7 +72,7 @@ add_executable(${PROJECT_NAME}_node src/ydlidar_ros_driver.cpp)
 #---------------------------------------------------------------------------------------
 # add projects that depend on
 #---------------------------------------------------------------------------------------
-add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp)
+#add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp)
 
 #---------------------------------------------------------------------------------------
 # link libraries

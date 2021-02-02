@@ -23,6 +23,7 @@
     <param name="intensity"    type="bool"   value="false"/>
     <param name="support_motor_dtr"    type="bool"   value="true"/>
     <param name="invalid_range_is_inf"    type="bool"   value="false"/>
+    <param name="point_cloud_preservative"    type="bool"   value="false"/>
 
     <!-- float property -->
     <param name="angle_min"    type="double" value="-180" />

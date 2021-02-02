@@ -101,8 +101,9 @@ is `"ydlidar_ws/src/ydlidar_ros_driver/launch"`. All launch files are listed as 
 ## Publish Topic
 | Topic                | Type                    | Description                                      |
 |----------------------|-------------------------|--------------------------------------------------|
-| `scan`               | sensor_msgs/LaserScan   | 2D laser scan of the 0-angle ring                |
-| `laser_fan`           | ydlidar_ros_driver::LaserFan   | 2D Raw laser fan of the 0-angle ring                |
+| `scan`               | sensor_msgs/LaserScan   | 2D laser scan of the 0-angle ring  
+| `point_cloud`        | sensor_msgs/PointCloud  | 2D point cloud of the 0-angle ring               |
+| ~~`laser_fan`~~(removed in version 1.0.1)           | ydlidar_ros_driver::LaserFan   | 2D Raw laser fan of the 0-angle ring                |
 
 ## Subscribe Service
 | Service                | Type                    | Description                                      |
@@ -139,6 +140,7 @@ The ydlidar_ros_driver internal parameters are in the launch file, they are list
 | range_max     | float | Maximum Valid range.<br/>default: `16.0` |
 | frequency     | float | Set Scanning Frequency.<br/>default: `10.0` |
 | invalid_range_is_inf     | bool | Invalid Range is inf.<br/>true -- inf.<br/>false -- 0.0.<br/>default: `false` |
+| point_cloud_preservative  | bool | Keep invalid range.<br/>true -- Keep.<br/>false -- Reject.<br/>default: `false` |
 More paramters details, see [here](details.md)
 
 ## Contact EAI
