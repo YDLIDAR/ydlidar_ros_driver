@@ -7,8 +7,19 @@ project(ydlidar_ros_driver)
 #list(APPEND CMAKE_MODULE_PATH "/home/tony/gitlab/build/install/share/YDLIDAR_SDK")
 ############## YDLIDAR SDK START#####################################
 #find ydlidar_sdk package
-find_package(ydlidar_sdk REQUIRED)
-
+#find_package(ydlidar_sdk REQUIRED)
+############## YDLIDAR SDK START#####################################
+#Include directories
+INCLUDE_DIRECTORIES(
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/YDLidar-SDK
+  ${CMAKE_SOURCE_DIR}/YDLidar-SDK/src
+  ${CMAKE_CURRENT_BINARY_DIR}/YDLidar-SDK
+)
+#Add YDLIDAR SDK sub project
+add_subdirectory(YDLidar-SDK)
+set(YDLIDAR_SDK_LIBRARIES ydlidar_sdk)
+############## YDLIDAR SDK END#####################################
 
 #Include directories
 include_directories(
@@ -31,14 +42,14 @@ find_package(catkin REQUIRED COMPONENTS
 	)
 
 ##################LaserFan ##########################
-add_message_files(DIRECTORY msg
-  FILES
-  LaserFan.msg
-)
+#add_message_files(DIRECTORY msg
+#  FILES
+#  LaserFan.msg
+#)
 
-generate_messages(DEPENDENCIES
-  std_msgs
-)
+#generate_messages(DEPENDENCIES
+#  std_msgs
+#)
 
 ###################################
 ## catkin specific configuration ##
@@ -92,7 +103,7 @@ add_executable(${PROJECT_NAME}_node src/ydlidar_ros_driver.cpp NoiseFilter/Noise
 #---------------------------------------------------------------------------------------
 # add projects that depend on
 #---------------------------------------------------------------------------------------
-add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp)
+#add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp)
 #---------------------------------------------------------------------------------------
 # link libraries
 #---------------------------------------------------------------------------------------
