@@ -1,7 +1,7 @@
 <launch>
   <node name="ydlidar_lidar_publisher"  pkg="ydlidar_ros_driver"  type="ydlidar_ros_driver_node" output="screen" respawn="false" >
     <!-- string property -->
-    <param name="port"         type="string" value="/dev/ydlidar"/>  
+    <param name="port"         type="string" value="/dev/ttyUSB0"/>  
     <param name="frame_id"     type="string" value="laser_frame"/>
     <param name="ignore_array"     type="string" value=""/>
 

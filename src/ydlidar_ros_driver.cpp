@@ -27,7 +27,7 @@
 #include "sensor_msgs/PointCloud.h"
 //#include "ydlidar_ros_driver/LaserFan.h"
 #include "std_srvs/Empty.h"
-#include "src/CYdLidar.h"
+#include "ydlidar_s2pro/CYdLidar.h"
 #include "ydlidar_config.h"
 #include <limits>       // std::numeric_limits
 
@@ -79,17 +79,17 @@ int main(int argc, char **argv) {
   nh_private.param<int>("baudrate", optval, 230400);
   laser.setlidaropt(LidarPropSerialBaudrate, &optval, sizeof(int));
   /// tof lidar
-  optval = TYPE_TRIANGLE;
-  nh_private.param<int>("lidar_type", optval, TYPE_TRIANGLE);
-  laser.setlidaropt(LidarPropLidarType, &optval, sizeof(int));
+//  optval = TYPE_TRIANGLE;
+//  nh_private.param<int>("lidar_type", optval, TYPE_TRIANGLE);
+//  laser.setlidaropt(LidarPropLidarType, &optval, sizeof(int));
   /// device type
-  optval = YDLIDAR_TYPE_SERIAL;
-  nh_private.param<int>("device_type", optval, YDLIDAR_TYPE_SERIAL);
-  laser.setlidaropt(LidarPropDeviceType, &optval, sizeof(int));
+//  optval = YDLIDAR_TYPE_SERIAL;
+//  nh_private.param<int>("device_type", optval, YDLIDAR_TYPE_SERIAL);
+//  laser.setlidaropt(LidarPropDeviceType, &optval, sizeof(int));
   /// sample rate
-  optval = 9;
-  nh_private.param<int>("sample_rate", optval, 9);
-  laser.setlidaropt(LidarPropSampleRate, &optval, sizeof(int));
+//  optval = 9;
+//  nh_private.param<int>("sample_rate", optval, 9);
+//  laser.setlidaropt(LidarPropSampleRate, &optval, sizeof(int));
   /// abnormal count
   optval = 4;
   nh_private.param<int>("abnormal_check_count", optval, 4);
@@ -163,15 +163,15 @@ int main(int argc, char **argv) {
     //Start the device scanning routine which runs on a separate thread and enable motor.
     ret = laser.turnOn();
   } else {
-    ROS_ERROR("%s\n", laser.DescribeError());
+    ROS_ERROR("%s\n", ydlidar::protocol::DescribeError(laser.getDriverError()));
   }
 
   ros::Rate r(30);
 
   while (ret && ros::ok()) {
     LaserScan scan;
-
-    if (laser.doProcessSimple(scan)) {
+    bool  hardError;
+    if (laser.doProcessSimple(scan, hardError)) {
       sensor_msgs::LaserScan scan_msg;
       sensor_msgs::PointCloud pc_msg;
 //      ydlidar_ros_driver::LaserFan fan;
@@ -206,7 +206,6 @@ int main(int argc, char **argv) {
       pc_msg.channels[idx_intensity].name = "intensities";
       int idx_timestamp = 1;
       pc_msg.channels[idx_timestamp].name = "stamps";
-
       for (size_t i = 0; i < scan.points.size(); i++) {
         int index = std::ceil((scan.points[i].angle - scan.config.min_angle) /
                               scan.config.angle_increment);

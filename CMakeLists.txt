@@ -6,7 +6,7 @@ project(ydlidar_ros_driver)
 
 ############## YDLIDAR SDK START#####################################
 #find ydlidar_sdk package
-find_package(ydlidar_sdk REQUIRED)
+find_package(ydlidars2pro REQUIRED)
 
 ############## YDLIDAR SDK END#####################################
 
@@ -57,10 +57,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 #Include directories
-include_directories(${catkin_INCLUDE_DIRS} ${YDLIDAR_SDK_INCLUDE_DIRS})
+include_directories(${catkin_INCLUDE_DIRS} ${ydlidar_s2pro_INCLUDE_DIRS})
 
 #link library directories
-link_directories(${YDLIDAR_SDK_LIBRARY_DIRS})
+link_directories(/usr/local/lib)
 
 
 
@@ -79,7 +79,7 @@ add_executable(${PROJECT_NAME}_node src/ydlidar_ros_driver.cpp)
 #---------------------------------------------------------------------------------------
 target_link_libraries(${PROJECT_NAME}_node
 	${catkin_LIBRARIES}
-	${YDLIDAR_SDK_LIBRARIES}
+	ydlidar_s2pro
 	)
 
 
