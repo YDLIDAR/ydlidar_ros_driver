@@ -16,8 +16,9 @@ ydlidar_ros_driver depends on S2-Pro library. If you have never install SDK S2-P
    `git clone https://github.com/YDLIDAR/ydlidar_ros_driver.git ydlidar_ws/src/ydlidar_ros_driver`
 
 2. Build ydlidar_ros_driver package :
-   cd  ydlidar_ws/src/ydlidar_ros_driver
+
    ```
+   cd  ydlidar_ws/src/ydlidar_ros_driver
    git switch S2-Pro
    cd ../../
    catkin_make
