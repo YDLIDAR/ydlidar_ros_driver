@@ -5,7 +5,7 @@ ydlidar_ros_driver is a new ros package, which is designed to gradually become t
 
 ## Compile & Install S2-Pro SDK
 
-ydlidar_ros_driver depends on YDLidar-SDK library. If you have never install SDK S2-Pro library or it is out of date, you must first install S2-Pro library. If you have installed the latest version of YDLidar-SDK, skip this step and go to the next step.
+ydlidar_ros_driver depends on S2-Pro library. If you have never install SDK S2-Pro library or it is out of date, you must first install S2-Pro library. If you have installed the latest version of S2-Pro, skip this step and go to the next step.
 
 1. Download or clone the [YDLIDAR/S2-Pro](https://github.com/YDLIDAR/S2-Pro) repository on GitHub.
 2. Compile and install S2-Pro with the branch name intensity in the *** build *** directory following `README.md` of YDLIDAR/S2-Pro.
@@ -17,8 +17,8 @@ ydlidar_ros_driver depends on YDLidar-SDK library. If you have never install SDK
 
 2. Build ydlidar_ros_driver package :
    cd  ydlidar_ws/src/ydlidar_ros_driver
-   git switch S2-Pro
    ```
+   git switch S2-Pro
    cd ../../
    catkin_make
    ```
