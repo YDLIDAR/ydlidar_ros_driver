@@ -3,13 +3,12 @@
 
 ydlidar_ros_driver is a new ros package, which is designed to gradually become the standard driver package for ydlidar devices in the ros environment.
 
-## Compile & Install YDLidar SDK
+## Compile & Install S2-Pro SDK
 
-ydlidar_ros_driver depends on YDLidar-SDK library. If you have never installed YDLidar-SDK library or it is out of date, you must first install YDLidar-SDK library. If you have installed the latest version of YDLidar-SDK, skip this step and go to the next step.
+ydlidar_ros_driver depends on YDLidar-SDK library. If you have never install SDK S2-Pro library or it is out of date, you must first install S2-Pro library. If you have installed the latest version of YDLidar-SDK, skip this step and go to the next step.
 
-1. Download or clone the [YDLIDAR/YDLidar-SDK](https://github.com/YDLIDAR/YDLidar-SDK) repository on GitHub.
-2. Compile and install the YDLidar-SDK under the ***build*** directory following `README.md` of YDLIDAR/YDLidar-SDK.
-
+1. Download or clone the [YDLIDAR/S2-Pro](https://github.com/YDLIDAR/S2-Pro) repository on GitHub.
+2. Compile and install S2-Pro with the branch name intensity in the *** build *** directory following `README.md` of YDLIDAR/S2-Pro.
 ## Clone ydlidar_ros_driver
 
 1. Clone ydlidar_ros_driver package for github : 
@@ -17,12 +16,13 @@ ydlidar_ros_driver depends on YDLidar-SDK library. If you have never installed Y
    `git clone https://github.com/YDLIDAR/ydlidar_ros_driver.git ydlidar_ws/src/ydlidar_ros_driver`
 
 2. Build ydlidar_ros_driver package :
-
+   cd  ydlidar_ws/src/ydlidar_ros_driver
+   git switch S2-Pro
    ```
-   cd ydlidar_ws
+   cd ../../
    catkin_make
    ```
-   <font color=Red size=4>>Note: If the following error occurs, Please install  [YDLIDAR/YDLidar-SDK](https://github.com/YDLIDAR/YDLidar-SDK) first.</font>
+   <font color=Red size=4>>Note: If the following error occurs, Please install  [YDLIDAR/S2-Pro](https://github.com/YDLIDAR/S2-Pro) first.</font>
 
    ![CMAKE ERROR](images/cmake_error.png  "CMAKE ERROR")
 
@@ -33,7 +33,7 @@ ydlidar_ros_driver depends on YDLidar-SDK library. If you have never installed Y
     Note: Add permanent workspace environment variables.
     It's convenientif the ROS environment variables are automatically added to your bash session every time a new shell is launched:
     ```
-    $echo "source ~/ydlidar_ws/devel/setup.bash" >> ~/.bashrc
+    $echo "source ydlidar_ws/devel/setup.bash" >> ~/.bashrc
     $source ~/.bashrc
     ```
 4. Confirmation
@@ -97,6 +97,7 @@ is `"ydlidar_ws/src/ydlidar_ros_driver/launch"`. All launch files are listed as 
 | TX.launch         | Connect to TX8/TX20 LiDAR<br />Publish LaserScan message on `scan` topic |
 | X2.launch         | Connect to X2/X2L LiDAR<br />Publish LaserScan message on `scan` topic |
 | X4.launch         | Connect to X4 LiDAR<br />Publish LaserScan message on `scan` topic |
+| S2Pro.launch      | Connect to S2Pro LiDAR<br />Publish LaserScan message on `scan` topic |
 
 ## Publish Topic
 | Topic                | Type                    | Description                                      |
