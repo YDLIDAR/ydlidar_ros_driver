@@ -27,8 +27,7 @@
 #include "sensor_msgs/PointCloud.h"
 //#include "ydlidar_ros_driver/LaserFan.h"
 #include "std_srvs/Empty.h"
-#include "ydlidar_s2pro/CYdLidar.h"
-#include "ydlidar_config.h"
+#include "CYdLidar.h"
 #include <limits>       // std::numeric_limits
 
 #define SDKROSVerision "1.0.1"
@@ -87,9 +86,9 @@ int main(int argc, char **argv) {
 //  nh_private.param<int>("device_type", optval, YDLIDAR_TYPE_SERIAL);
 //  laser.setlidaropt(LidarPropDeviceType, &optval, sizeof(int));
   /// sample rate
-//  optval = 9;
-//  nh_private.param<int>("sample_rate", optval, 9);
-//  laser.setlidaropt(LidarPropSampleRate, &optval, sizeof(int));
+  optval = 9;
+  nh_private.param<int>("sample_rate", optval, 9);
+  laser.setlidaropt(LidarPropSampleRate, &optval, sizeof(int));
   /// abnormal count
   optval = 4;
   nh_private.param<int>("abnormal_check_count", optval, 4);
