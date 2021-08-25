@@ -30,7 +30,7 @@
 #include "CYdLidar.h"
 #include <limits>       // std::numeric_limits
 
-#define SDKROSVerision "1.0.1"
+#define SDKROSVerision "1.0.2"
 
 CYdLidar laser;
 
@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
   //////////////////////bool property/////////////////
   /// fixed angle resolution
   bool b_optvalue = false;
-  nh_private.param<bool>("fixed_resolution", b_optvalue, true);
+  nh_private.param<bool>("resolution_fixed", b_optvalue, true);
   laser.setlidaropt(LidarPropFixedResolution, &b_optvalue, sizeof(bool));
   /// rotate 180
   nh_private.param<bool>("reversion", b_optvalue, true);
