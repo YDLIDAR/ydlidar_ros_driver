@@ -94,7 +94,10 @@ int main(int argc, char **argv) {
   optval = 4;
   nh_private.param<int>("abnormal_check_count", optval, 4);
   laser.setlidaropt(LidarPropAbnormalCheckCount, &optval, sizeof(int));
-
+  //intensity bit count
+  optval = 10;
+  nh_private.param<int>("intensity_bit", optval, 10);
+  laser.setlidaropt(LidarPropIntenstiyBit, &optval, sizeof(int));
 
   //////////////////////bool property/////////////////
   /// fixed angle resolution
