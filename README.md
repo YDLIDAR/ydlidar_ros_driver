@@ -97,6 +97,7 @@ is `"ydlidar_ws/src/ydlidar_ros_driver/launch"`. All launch files are listed as 
 | TX.launch         | Connect to TX8/TX20 LiDAR<br />Publish LaserScan message on `scan` topic |
 | X2.launch         | Connect to X2/X2L LiDAR<br />Publish LaserScan message on `scan` topic |
 | X4.launch         | Connect to X4 LiDAR<br />Publish LaserScan message on `scan` topic |
+| X4-Pro.launch     | Connect to X4 Pro LiDAR<br />Publish LaserScan message on `scan` topic |
 | TSA.launch        | Connect to TSA LiDAR<br />Publish LaserScan message on `scan` topic |
 | Tmini.launch      | Connect to T-mini/T-mini Pro LiDAR<br />Publish LaserScan message on `scan` topic |
 
