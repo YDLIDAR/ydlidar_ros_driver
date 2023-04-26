@@ -16,8 +16,8 @@
     <!-- bool property -->
     <param name="resolution_fixed"    type="bool"   value="true"/>
     <param name="auto_reconnect"    type="bool"   value="true"/>
-    <param name="reversion"    type="bool"   value="true"/>
-    <param name="inverted"    type="bool"   value="true"/>
+    <param name="reversion"    type="bool"   value="false"/>
+    <param name="inverted"    type="bool"   value="false"/>
     <param name="isSingleChannel"    type="bool"   value="false"/>
     <param name="intensity"    type="bool"   value="true"/>
     <param name="support_motor_dtr"    type="bool"   value="false"/>

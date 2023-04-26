@@ -101,6 +101,8 @@ is `"ydlidar_ws/src/ydlidar_ros_driver/launch"`. All launch files are listed as 
 | TSA.launch        | Connect to TSA LiDAR<br />Publish LaserScan message on `scan` topic |
 | Tmini.launch      | Connect to T-mini/T-mini Pro LiDAR<br />Publish LaserScan message on `scan` topic |
 | SDM15.launch      | Connect to SDM15 LiDAR<br />Publish LaserScan message on `scan` topic |
+| GS1.launch	    | Connect to GS1 LiDAR<br />Publish LaserScan message on `scan` topic |
+| GS2.launch        | Connect to GS2 LiDAR<br />Publish LaserScan message on `scan` topic |
 
 ## Publish Topic
 | Topic                | Type                    | Description                                      |
