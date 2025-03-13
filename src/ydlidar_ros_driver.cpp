@@ -98,16 +98,6 @@ int main(int argc, char **argv) {
   optval = 10;
   nh_private.param<int>("intensity_bit", optval, 10);
   laser.setlidaropt(LidarPropIntenstiyBit, &optval, sizeof(int));
-  //设置GS工作模式
-  int i_v = 0;
-  nh_private.param<int>("m1_mode", i_v, 0);
-  laser.setWorkMode(i_v, 0x01);
-  i_v = 0;
-  nh_private.param<int>("m2_mode", i_v, 0);
-  laser.setWorkMode(i_v, 0x02);
-  i_v = 1;
-  nh_private.param<int>("m3_mode", i_v, 1);
-  laser.setWorkMode(i_v, 0x04);
 
   //////////////////////bool property/////////////////
   /// fixed angle resolution
@@ -169,13 +159,26 @@ int main(int argc, char **argv) {
   ros::ServiceServer start_scan_service = nh.advertiseService("start_scan",
                                           start_scan);
 
-  // initialize SDK and LiDAR
+  //initialize SDK and LiDAR
   bool ret = laser.initialize();
+  if (ret) 
+  {
+    //设置GS工作模式
+    int i_v = 0;
+    nh_private.param<int>("m1_mode", i_v, 0);
+    laser.setWorkMode(i_v, 0x01);
+    i_v = 0;
+    nh_private.param<int>("m2_mode", i_v, 0);
+    laser.setWorkMode(i_v, 0x02);
+    i_v = 1;
+    nh_private.param<int>("m3_mode", i_v, 1);
+    laser.setWorkMode(i_v, 0x04);
 
-  if (ret) {//success
-    //Start the device scanning routine which runs on a separate thread and enable motor.
+    //Start the device scanning.
     ret = laser.turnOn();
-  } else {
+  } 
+  else 
+  {
     ROS_ERROR("%s\n", laser.DescribeError());
   }
 
